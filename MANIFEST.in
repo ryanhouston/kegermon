@@ -1,0 +1,2 @@
+graft kegermon/templates
+graft kegermon/static
