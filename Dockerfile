@@ -7,4 +7,4 @@ RUN pip install --editable .
 
 ENV FLASK_APP kegermon
 ENV FLASK_DEBUG true
-ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
+CMD flask run --host=0.0.0.0
