@@ -23,12 +23,10 @@ def get_redis():
 def index():
     temp_monitor = TemperatureMonitor(get_redis())
     temp_records = temp_monitor.fetch(num=3)
-    return render_template('index.html', temp_records=temp_records)
-
-@app.route('/taps')
-def taps():
-    summary = TapSummary()
-    return jsonify(summary.taps())
+    taps = TapSummary().taps()
+    return render_template('index.html',
+                           temp_records=temp_records,
+                           taps=taps)
 
 @app.route('/temperatures', methods = ['POST'])
 def record_temperatures():

@@ -1,6 +1,18 @@
 {% extends 'layout.html' %}
 {% block body %}
   <section>
+    <h2>What's on Tap?</h2>
+    <ol>
+        {% for tap in taps %}
+        <li>
+          <h3>{{ tap.name }} <small>{{ tap.style }}</small></h3>
+          <p>{{ tap.description }} </p>
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section>
     <h2>Temperatures</h2>
     <table class="table">
       <thead>
