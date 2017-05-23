@@ -1,4 +1,22 @@
 {% extends 'layout.html' %}
 {% block body %}
-  <h2>Welcome to Kegermon!</h2>
+  <section>
+    <h2>Temperatures</h2>
+    <table>
+      <thead>
+        <th>Timestamp</th>
+        <th>Sensor 1</th>
+        <th>Sensor 2</th>
+        <th>Sensor 3</th>
+      </thead>
+      {% for temp in temp_records %}
+        <tr>
+          <td>{{ format_timestamp(temp.get('timestamp')) }}</td>
+          <td>{{ temp.get('sensor1') }}</td>
+          <td>{{ temp.get('sensor2') }}</td>
+          <td>{{ temp.get('sensor3') }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </section>
 {% endblock %}
