@@ -17,6 +17,8 @@ def get_redis():
         g.redis_store = FlaskRedis(app, decode_responses=True)
     return g.redis_store
 
+# Endpoints
+
 @app.route('/')
 def index():
     temp_monitor = TemperatureMonitor(get_redis())
@@ -35,6 +37,8 @@ def record_temperatures():
     response = jsonify({})
     response.status_code = 201
     return response
+
+# Context helpers
 
 @app.context_processor
 def timestamp_utility():
