@@ -7,5 +7,6 @@ setup(
     install_requires=[
         'flask',
         'flask-redis',
+        'Flask-WTF',
     ],
 )

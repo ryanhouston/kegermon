@@ -14,7 +14,9 @@
 </head>
 <body class="container">
   <header>
-    <h1>Kegermon</h1>
+    {% block title %}
+      <h1>Kegermon</h1>
+    {% endblock %}
   </header>
   <main>
     {% block body %}{% endblock %}

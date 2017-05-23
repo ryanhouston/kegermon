@@ -7,6 +7,7 @@ from flask_redis import FlaskRedis
 from kegermon.models.tap_summary import TapSummary
 from kegermon.models.temperature_monitor import TemperatureMonitor
 from kegermon.config import BaseConfig
+from kegermon.forms import TapUpdateForm
 
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
@@ -35,6 +36,26 @@ def record_temperatures():
     response = jsonify({})
     response.status_code = 201
     return response
+
+@app.route('/admin')
+def admin_index():
+    taps = TapSummary().taps()
+    form = TapUpdateForm()
+    return render_template('admin_index.html',
+                           taps=taps,
+                           form=form)
+
+@app.route('/admin/taps', methods = ['POST'])
+def admin_tap_update():
+    return redirect(url_for('admin_index'))
+
+# TODO At least make this use a POST method if not DELETE
+# No way currently to send a DELETE request without JS or adding an extension
+@app.route('/admin/clear_tap')
+def admin_tap_clear():
+    position = request.args.get('position')
+    app.logger.debug(f'DELETE tap position {position}')
+    return redirect(url_for('admin_index'))
 
 # Context helpers
 
