@@ -18,7 +18,7 @@ def get_redis():
 
 @app.route('/')
 def index():
-    return "Welcome to KegerMon!"
+    return render_template('index.html')
 
 @app.route('/taps')
 def taps():
