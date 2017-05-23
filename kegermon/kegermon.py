@@ -11,7 +11,10 @@ app = Flask(__name__)
 app.config.from_object(BaseConfig)
 app.config.from_envvar('KEGERMON_SETTINGS', silent=True)
 
-redis_store = FlaskRedis(app)
+def get_redis():
+    if not hasattr(g, 'redis_store'):
+        g.redis_store = FlaskRedis(app)
+    return g.redis_store
 
 @app.route('/')
 def index():
@@ -24,7 +27,7 @@ def taps():
 
 @app.route('/temperatures', methods = ['POST'])
 def record_temperatures():
-    TemperatureMonitor().record(request.get_json())
+    TemperatureMonitor(get_redis()).record(request.get_json())
 
     response = jsonify({})
     response.status_code = 201
