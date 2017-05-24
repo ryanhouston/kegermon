@@ -66,7 +66,9 @@ def admin_tap_update():
 @app.route('/admin/clear_tap')
 def admin_tap_clear():
     position = request.args.get('position')
-    app.logger.debug(f'DELETE tap position {position}')
+    taps = TapSummary(get_redis())
+    taps.clear(position)
+
     return redirect(url_for('admin_index'))
 
 

@@ -12,6 +12,9 @@ class TapSummary:
     def __init__(self, redis_store):
         self.redis_store = redis_store
 
+    def clear(self, position):
+        self.redis_store.delete(f'tap:{position}')
+
     def save(self, tap):
         key = f'tap:{tap.position}'
         self.redis_store.hmset(key, tap.__dict__)
