@@ -4,7 +4,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
 from flask_redis import FlaskRedis
 
-from kegermon.models.tap_summary import TapSummary
+from kegermon.models.tap_summary import TapSummary, Tap
 from kegermon.models.temperature_monitor import TemperatureMonitor
 from kegermon.config import BaseConfig
 from kegermon.forms import TapUpdateForm
@@ -26,7 +26,7 @@ def get_redis():
 def index():
     temp_monitor = TemperatureMonitor(get_redis())
     temp_records = temp_monitor.fetch(num=3)
-    taps = TapSummary().taps()
+    taps = TapSummary(get_redis()).taps()
     return render_template('index.html',
                            temp_records=temp_records,
                            taps=taps)
@@ -43,7 +43,7 @@ def record_temperatures():
 
 @app.route('/admin')
 def admin_index():
-    taps = TapSummary().taps()
+    taps = TapSummary(get_redis()).taps()
     form = TapUpdateForm()
     return render_template('admin_index.html',
                            taps=taps,
@@ -52,6 +52,12 @@ def admin_index():
 
 @app.route('/admin/taps', methods=['POST'])
 def admin_tap_update():
+    form = TapUpdateForm()
+    if form.validate_on_submit():
+        tap = Tap()
+        form.populate_obj(tap)
+        taps = TapSummary(get_redis())
+        taps.save(tap)
     return redirect(url_for('admin_index'))
 
 

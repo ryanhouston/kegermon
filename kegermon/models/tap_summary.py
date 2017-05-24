@@ -1,35 +1,23 @@
 class Tap:
 
-    def __init__(self, name, style, description, position):
+    def __init__(self, name=None, style=None, description=None, position=None):
         self.name = name
         self.style = style
         self.description = description
         self.position = position
 
-    @classmethod
-    def null(cls, position):
-        return Tap(name='Empty', position=position,
-                   style='', description='')
-
-    def isEmpty(self):
-        return name == 'Empty'
-
 
 class TapSummary:
 
+    def __init__(self, redis_store):
+        self.redis_store = redis_store
+
+    def save(self, tap):
+        key = f'tap:{tap.position}'
+        self.redis_store.hmset(key, tap.__dict__)
+
     def taps(self):
-        return [
-                Tap(name='Blondie',
-                    style='Blonde Ale',
-                    position=1,
-                    description='Light and easy'),
-                Tap(name='Big Brown',
-                    style='American Brown Ale',
-                    position=2,
-                    description='Dark and bold'),
-                Tap.null(position=3),
-                Tap(name='Soda Water',
-                    style='not beer',
-                    position=4,
-                    description='Cool, refreshing, bubbly water.'),
-        ]
+        pipe = self.redis_store.pipeline()
+        [pipe.hgetall(f'tap:{i}') for i in range(1, 5)]
+        taps = [Tap(**row) for row in pipe.execute()]
+        return taps
