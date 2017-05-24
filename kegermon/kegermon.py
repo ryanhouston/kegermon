@@ -13,10 +13,12 @@ app = Flask(__name__)
 app.config.from_object(BaseConfig)
 app.config.from_envvar('KEGERMON_SETTINGS', silent=True)
 
+
 def get_redis():
     if not hasattr(g, 'redis_store'):
         g.redis_store = FlaskRedis(app, decode_responses=True)
     return g.redis_store
+
 
 # Endpoints
 
@@ -29,13 +31,15 @@ def index():
                            temp_records=temp_records,
                            taps=taps)
 
-@app.route('/temperatures', methods = ['POST'])
+
+@app.route('/temperatures', methods=['POST'])
 def record_temperatures():
     TemperatureMonitor(get_redis()).record(request.get_json())
 
     response = jsonify({})
     response.status_code = 201
     return response
+
 
 @app.route('/admin')
 def admin_index():
@@ -45,9 +49,11 @@ def admin_index():
                            taps=taps,
                            form=form)
 
-@app.route('/admin/taps', methods = ['POST'])
+
+@app.route('/admin/taps', methods=['POST'])
 def admin_tap_update():
     return redirect(url_for('admin_index'))
+
 
 # TODO At least make this use a POST method if not DELETE
 # No way currently to send a DELETE request without JS or adding an extension
@@ -56,6 +62,7 @@ def admin_tap_clear():
     position = request.args.get('position')
     app.logger.debug(f'DELETE tap position {position}')
     return redirect(url_for('admin_index'))
+
 
 # Context helpers
 
