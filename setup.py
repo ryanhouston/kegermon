@@ -8,5 +8,6 @@ setup(
         'flask',
         'flask-redis',
         'Flask-WTF',
+        'Flask-BasicAuth',
     ],
 )

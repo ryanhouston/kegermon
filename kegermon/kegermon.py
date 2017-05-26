@@ -3,6 +3,7 @@ import time
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
 from flask_redis import FlaskRedis
+from flask_basicauth import BasicAuth
 
 from kegermon.models.tap_summary import TapSummary, Tap
 from kegermon.models.temperature_monitor import TemperatureMonitor
@@ -12,6 +13,8 @@ from kegermon.forms import TapUpdateForm
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
 app.config.from_envvar('KEGERMON_SETTINGS', silent=True)
+
+basic_auth = BasicAuth(app)
 
 
 def get_redis():
@@ -42,6 +45,7 @@ def record_temperatures():
 
 
 @app.route('/admin')
+@basic_auth.required
 def admin_index():
     taps = TapSummary(get_redis()).taps()
     form = TapUpdateForm()
@@ -51,6 +55,7 @@ def admin_index():
 
 
 @app.route('/admin/taps', methods=['POST'])
+@basic_auth.required
 def admin_tap_update():
     form = TapUpdateForm()
     if form.validate_on_submit():
@@ -64,6 +69,7 @@ def admin_tap_update():
 # TODO At least make this use a POST method if not DELETE
 # No way currently to send a DELETE request without JS or adding an extension
 @app.route('/admin/clear_tap')
+@basic_auth.required
 def admin_tap_clear():
     position = request.args.get('position')
     taps = TapSummary(get_redis())
