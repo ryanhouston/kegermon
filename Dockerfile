@@ -6,6 +6,4 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY . .
 
-ENV FLASK_APP kegermon/kegermon.py
-ENV FLASK_DEBUG true
-CMD flask run --host=0.0.0.0
+CMD DEBUG=True gunicorn --bind=0.0.0.0:5000 --access-logfile - --reload kegermon:app
