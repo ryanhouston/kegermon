@@ -5,8 +5,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from flask_redis import FlaskRedis
 from flask_basicauth import BasicAuth
 
-from kegermon.models.tap_summary import TapSummary, Tap
-from kegermon.models.temperature_monitor import TemperatureMonitor
+from kegermon.models import TapSummary, Tap, TemperatureMonitor
 from kegermon.config import BaseConfig
 from kegermon.forms import TapUpdateForm
 
