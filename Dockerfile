@@ -2,9 +2,10 @@ FROM python:3
 
 WORKDIR /srv/app
 
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
 COPY . .
-RUN pip install --editable .
 
-ENV FLASK_APP kegermon
+ENV FLASK_APP kegermon/kegermon.py
 ENV FLASK_DEBUG true
 CMD flask run --host=0.0.0.0
